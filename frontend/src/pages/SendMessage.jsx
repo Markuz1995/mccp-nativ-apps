@@ -1,37 +1,120 @@
-/**
- * SendMessage — FASE 1 Placeholder
- * This screen will be fully implemented in FASE 3.
- * For now it confirms React + routing works.
- */
+import { useState } from 'react'
+import { createMessage } from '../api'
+
+const CHANNELS = ['email', 'slack', 'sms']
+
 function SendMessage() {
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [channels, setChannels] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(null)
+
+  const toggleChannel = (ch) => {
+    setChannels((prev) =>
+      prev.includes(ch) ? prev.filter((c) => c !== ch) : [...prev, ch],
+    )
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError(null)
+    setSuccess(null)
+    setLoading(true)
+
+    try {
+      const result = await createMessage({ title, content, channels })
+      setSuccess(`Message sent! ID: ${result.data.id}`)
+      setTitle('')
+      setContent('')
+      setChannels([])
+    } catch (err) {
+      const msg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.message ||
+        'An unexpected error occurred'
+      setError(msg)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div style={styles.container}>
-      <div style={styles.badge}>FASE 3</div>
       <h1 style={styles.title}>Send Message</h1>
-      <p style={styles.desc}>
-        This screen will include the form to send messages with fields
-        <strong> title</strong>, <strong>content</strong> and channel selection
-        (<strong>Email</strong>, <strong>Slack</strong>, <strong>SMS</strong>).
-      </p>
-      <div style={styles.fields}>
+
+      <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.field}>
-          <span style={styles.label}>title</span>
-          <div style={styles.mockInput} />
+          <label style={styles.label}>Title</label>
+          <input
+            style={styles.input}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Message title"
+            required
+          />
         </div>
+
         <div style={styles.field}>
-          <span style={styles.label}>content</span>
-          <div style={{ ...styles.mockInput, height: '80px' }} />
+          <label style={styles.label}>Content</label>
+          <textarea
+            style={{ ...styles.input, minHeight: '120px', resize: 'vertical' }}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Write your message content here..."
+            required
+          />
         </div>
+
         <div style={styles.field}>
-          <span style={styles.label}>channels</span>
+          <label style={styles.label}>Channels</label>
           <div style={styles.channels}>
-            {['Email', 'Slack', 'SMS'].map((ch) => (
-              <div key={ch} style={styles.chip}>{ch}</div>
+            {CHANNELS.map((ch) => (
+              <label key={ch} style={styles.chip}>
+                <input
+                  type="checkbox"
+                  checked={channels.includes(ch)}
+                  onChange={() => toggleChannel(ch)}
+                  style={{ display: 'none' }}
+                />
+                <span
+                  style={{
+                    ...styles.chipLabel,
+                    ...(channels.includes(ch) ? styles.chipActive : {}),
+                  }}
+                >
+                  {ch === 'email' ? '📧' : ch === 'slack' ? '💬' : '📱'} {ch}
+                </span>
+              </label>
             ))}
           </div>
         </div>
-      </div>
-      <div style={styles.mockBtn}>Send →</div>
+
+        {error && (
+          <div style={styles.alertError}>
+            <span>✕</span> {error}
+          </div>
+        )}
+
+        {success && (
+          <div style={styles.alertSuccess}>
+            <span>✓</span> {success}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading || channels.length === 0}
+          style={{
+            ...styles.btn,
+            ...(loading || channels.length === 0 ? styles.btnDisabled : {}),
+          }}
+        >
+          {loading ? 'Sending...' : 'Send →'}
+        </button>
+      </form>
     </div>
   )
 }
@@ -43,34 +126,16 @@ const styles = {
     borderRadius: 'var(--radius-lg)',
     padding: '2rem',
   },
-  badge: {
-    display: 'inline-block',
-    background: '#1e1b4b',
-    color: 'var(--color-primary-h)',
-    border: '1px solid var(--color-primary)',
-    borderRadius: '20px',
-    padding: '2px 12px',
-    fontSize: '0.75rem',
-    fontWeight: 700,
-    marginBottom: '1rem',
-    letterSpacing: '0.5px',
-  },
   title: {
     fontSize: '1.6rem',
     fontWeight: 700,
-    marginBottom: '0.5rem',
+    marginBottom: '1.5rem',
     color: 'var(--color-text)',
   },
-  desc: {
-    color: 'var(--color-muted)',
-    marginBottom: '1.5rem',
-    fontSize: '0.95rem',
-  },
-  fields: {
+  form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
-    marginBottom: '1.5rem',
+    gap: '1.25rem',
   },
   field: {
     display: 'flex',
@@ -84,33 +149,75 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
   },
-  mockInput: {
-    height: '38px',
+  input: {
+    padding: '10px 14px',
     background: '#1a2035',
-    borderRadius: 'var(--radius)',
     border: '1px solid var(--color-border)',
-    opacity: 0.6,
+    borderRadius: 'var(--radius)',
+    color: 'var(--color-text)',
+    fontSize: '0.95rem',
+    outline: 'none',
+    fontFamily: 'var(--font-sans)',
   },
   channels: {
     display: 'flex',
     gap: '0.5rem',
+    flexWrap: 'wrap',
   },
   chip: {
-    background: '#1e1b4b',
-    color: 'var(--color-primary-h)',
-    border: '1px dashed var(--color-primary)',
-    borderRadius: '6px',
-    padding: '4px 14px',
-    fontSize: '0.85rem',
-    opacity: 0.6,
+    cursor: 'pointer',
   },
-  mockBtn: {
+  chipLabel: {
     display: 'inline-block',
+    padding: '8px 16px',
+    borderRadius: '8px',
+    border: '1px solid var(--color-border)',
+    background: '#1a2035',
+    color: 'var(--color-muted)',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    transition: 'all 0.15s',
+  },
+  chipActive: {
+    background: '#1e1b4b',
+    border: '1px solid var(--color-primary)',
+    color: 'var(--color-primary-h)',
+  },
+  alertError: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '10px 14px',
+    background: '#3b0a0a',
+    border: '1px solid var(--color-error)',
+    borderRadius: 'var(--radius)',
+    color: '#fca5a5',
+    fontSize: '0.9rem',
+  },
+  alertSuccess: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '10px 14px',
+    background: '#052e16',
+    border: '1px solid var(--color-success)',
+    borderRadius: 'var(--radius)',
+    color: '#86efac',
+    fontSize: '0.9rem',
+  },
+  btn: {
+    padding: '0.7rem 2rem',
     background: 'var(--color-primary)',
     color: '#fff',
+    border: 'none',
     borderRadius: 'var(--radius)',
-    padding: '0.6rem 1.8rem',
     fontWeight: 600,
+    fontSize: '1rem',
+    cursor: 'pointer',
+    alignSelf: 'flex-start',
+    transition: 'all 0.15s',
+  },
+  btnDisabled: {
     opacity: 0.5,
     cursor: 'not-allowed',
   },
