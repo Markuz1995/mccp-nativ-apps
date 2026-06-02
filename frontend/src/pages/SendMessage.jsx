@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createMessage } from '../api'
+import styles from '../styles/SendMessage.styles'
 
 const CHANNELS = ['email', 'slack', 'sms']
 
@@ -117,110 +118,6 @@ function SendMessage() {
       </form>
     </div>
   )
-}
-
-const styles = {
-  container: {
-    background: 'var(--color-surface)',
-    border: '1px solid var(--color-border)',
-    borderRadius: 'var(--radius-lg)',
-    padding: '2rem',
-  },
-  title: {
-    fontSize: '1.6rem',
-    fontWeight: 700,
-    marginBottom: '1.5rem',
-    color: 'var(--color-text)',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.25rem',
-  },
-  field: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-  },
-  label: {
-    fontSize: '0.8rem',
-    color: 'var(--color-muted)',
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-  input: {
-    padding: '10px 14px',
-    background: '#1a2035',
-    border: '1px solid var(--color-border)',
-    borderRadius: 'var(--radius)',
-    color: 'var(--color-text)',
-    fontSize: '0.95rem',
-    outline: 'none',
-    fontFamily: 'var(--font-sans)',
-  },
-  channels: {
-    display: 'flex',
-    gap: '0.5rem',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    cursor: 'pointer',
-  },
-  chipLabel: {
-    display: 'inline-block',
-    padding: '8px 16px',
-    borderRadius: '8px',
-    border: '1px solid var(--color-border)',
-    background: '#1a2035',
-    color: 'var(--color-muted)',
-    fontSize: '0.9rem',
-    fontWeight: 500,
-    transition: 'all 0.15s',
-  },
-  chipActive: {
-    background: '#1e1b4b',
-    border: '1px solid var(--color-primary)',
-    color: 'var(--color-primary-h)',
-  },
-  alertError: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    padding: '10px 14px',
-    background: '#3b0a0a',
-    border: '1px solid var(--color-error)',
-    borderRadius: 'var(--radius)',
-    color: '#fca5a5',
-    fontSize: '0.9rem',
-  },
-  alertSuccess: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    padding: '10px 14px',
-    background: '#052e16',
-    border: '1px solid var(--color-success)',
-    borderRadius: 'var(--radius)',
-    color: '#86efac',
-    fontSize: '0.9rem',
-  },
-  btn: {
-    padding: '0.7rem 2rem',
-    background: 'var(--color-primary)',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 'var(--radius)',
-    fontWeight: 600,
-    fontSize: '1rem',
-    cursor: 'pointer',
-    alignSelf: 'flex-start',
-    transition: 'all 0.15s',
-  },
-  btnDisabled: {
-    opacity: 0.5,
-    cursor: 'not-allowed',
-  },
 }
 
 export default SendMessage
