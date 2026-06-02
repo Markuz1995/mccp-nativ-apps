@@ -1,0 +1,125 @@
+services:
+  # ─── Nginx Reverse Proxy ──────────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: mccp_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - php
+      - frontend
+    networks:
+      - mccp_network
+
+  # ─── PHP 8.4 / Laravel 12 ────────────────────────────────────────────────────
+  php:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mccp_php
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-mccp_db}
+      DB_USERNAME: ${DB_USERNAME:-mccp_user}
+      DB_PASSWORD: ${DB_PASSWORD:-mccp_password}
+      QUEUE_CONNECTION: database
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mccp_network
+
+  # ─── Laravel Queue Worker ─────────────────────────────────────────────────────
+  queue:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mccp_queue
+    restart: unless-stopped
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--timeout=90"]
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-mccp_db}
+      DB_USERNAME: ${DB_USERNAME:-mccp_user}
+      DB_PASSWORD: ${DB_PASSWORD:-mccp_password}
+      QUEUE_CONNECTION: database
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      php:
+        condition: service_started
+    networks:
+      - mccp_network
+
+  # ─── PostgreSQL 16 ────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: mccp_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-mccp_db}
+      POSTGRES_USER: ${DB_USERNAME:-mccp_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mccp_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-mccp_user} -d ${DB_DATABASE:-mccp_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - mccp_network
+
+  # ─── React 19 / Vite (Frontend) ───────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mccp_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api}
+    networks:
+      - mccp_network
+
+# ─── Networks ─────────────────────────────────────────────────────────────────
+networks:
+  mccp_network:
+    driver: bridge
+    name: mccp_network
+
+# ─── Volumes ──────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    name: mccp_postgres_data
