@@ -1,6 +1,6 @@
 /**
  * History — FASE 1 Placeholder
- * Esta pantalla se desarrollará completamente en FASE 3.
+ * This screen will be fully implemented in FASE 3.
  */
 function History() {
   const mockRows = [
@@ -12,7 +12,7 @@ function History() {
       <div style={styles.badge}>FASE 3</div>
       <h1 style={styles.title}>History Dashboard</h1>
       <p style={styles.desc}>
-        Tabla con el historial de mensajes enviados: fecha, título, resumen IA y estado.
+        Table with sent messages history: date, title, AI summary and status.
       </p>
       <table style={styles.table}>
         <thead>

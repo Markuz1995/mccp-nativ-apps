@@ -8,7 +8,7 @@ export default defineConfig({
     host: '0.0.0.0',     // Escuchar en todas las interfaces (necesario en Docker)
     port: 5173,
     watch: {
-      usePolling: true,  // Necesario para hot reload en Docker con volúmenes
+      usePolling: true,  // Required for hot reload in Docker with volumes
       interval: 1000,
     },
     proxy: {

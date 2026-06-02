@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
  * @OA\Info(
  *     title="MCCP API — Multi-Channel Content Processor",
  *     version="1.0.0",
- *     description="API REST para procesar mensajes con IA y distribuirlos a múltiples canales (Email, Slack, SMS).",
+ *     description="API REST to process messages with AI and distribute them to multiple channels (Email, Slack, SMS).",
  *     @OA\Contact(
  *         email="dev@mccp.local"
  *     )
@@ -21,12 +21,12 @@ use Illuminate\Http\JsonResponse;
  *
  * @OA\Tag(
  *     name="Health",
- *     description="Estado del servicio"
+ *     description="Service status"
  * )
  *
  * @OA\Tag(
  *     name="Messages",
- *     description="Creación y consulta de mensajes"
+ *     description="Message creation and retrieval"
  * )
  */
 class ApiDocController extends Controller
@@ -35,12 +35,12 @@ class ApiDocController extends Controller
      * @OA\Get(
      *     path="/health",
      *     tags={"Health"},
-     *     summary="Health check del sistema",
-     *     description="Verifica que el backend, la base de datos y el queue worker estén operativos.",
+ *     summary="System health check",
+ *     description="Verifies that the backend, database, and queue worker are operational.",
      *     operationId="healthCheck",
      *     @OA\Response(
      *         response=200,
-     *         description="Sistema operativo",
+     *         description="System operational",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="ok"),
      *             @OA\Property(property="service", type="string", example="MCCP API"),
@@ -53,7 +53,7 @@ class ApiDocController extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Error en el sistema"
+     *         description="System error"
      *     )
      * )
      */

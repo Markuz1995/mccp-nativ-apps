@@ -1,9 +1,5 @@
 import { useState } from 'react'
 
-// Páginas — se desarrollarán en FASE 3
-// Por ahora, placeholders funcionales que confirman que React está corriendo
-import SendMessage from './pages/SendMessage.jsx'
-import History from './pages/History.jsx'
 
 const PAGES = {
   send: 'send',

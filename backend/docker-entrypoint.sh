@@ -59,7 +59,7 @@ echo "[INFO] Configurando permisos de storage..."
 chown -R www-data:www-data "$WORK_DIR/storage" "$WORK_DIR/bootstrap/cache" 2>/dev/null || true
 chmod -R 775 "$WORK_DIR/storage" "$WORK_DIR/bootstrap/cache" 2>/dev/null || true
 
-# ─── 6. Limpiar caché de config ──────────────────────────────────────────────
+# ─── 6. Clear config cache ───────────────────────────────────────────────────
 php artisan config:clear
 php artisan cache:clear
 

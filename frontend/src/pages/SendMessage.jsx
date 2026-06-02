@@ -1,7 +1,7 @@
 /**
  * SendMessage — FASE 1 Placeholder
- * Esta pantalla se desarrollará completamente en FASE 3.
- * Por ahora confirma que React + routing funcionan.
+ * This screen will be fully implemented in FASE 3.
+ * For now it confirms React + routing works.
  */
 function SendMessage() {
   return (
@@ -9,8 +9,8 @@ function SendMessage() {
       <div style={styles.badge}>FASE 3</div>
       <h1 style={styles.title}>Send Message</h1>
       <p style={styles.desc}>
-        Esta pantalla incluirá el formulario para enviar mensajes con campos
-        <strong> title</strong>, <strong>content</strong> y selección de canales
+        This screen will include the form to send messages with fields
+        <strong> title</strong>, <strong>content</strong> and channel selection
         (<strong>Email</strong>, <strong>Slack</strong>, <strong>SMS</strong>).
       </p>
       <div style={styles.fields}>
