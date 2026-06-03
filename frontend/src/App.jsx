@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import styles from './styles/App.styles'
+import SendMessage from './pages/SendMessage'
+import History from './pages/History'
 
 const PAGES = {
   send: 'send',

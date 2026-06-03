@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('delivery_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('message_id')->constrained('messages')->cascadeOnDelete();
-            $table->enum('channel', ['email', 'slack', 'sms']);
-            $table->enum('status', ['sent', 'failed']);
-            $table->json('request_payload');
+            $table->string('channel');
+            $table->string('status');
+            $table->json('request_payload')->nullable();
             $table->json('response_payload')->nullable();
             $table->text('error_message')->nullable();
             $table->timestamp('created_at')->useCurrent();

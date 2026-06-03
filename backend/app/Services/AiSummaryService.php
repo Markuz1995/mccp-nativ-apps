@@ -2,19 +2,19 @@
 
 namespace App\Services;
 
-use App\Integrations\OpenAI\OpenAIClient;
+use App\Contracts\AiClientInterface;
 use Illuminate\Support\Facades\Log;
 
 class AiSummaryService
 {
     public function __construct(
-        private readonly OpenAIClient $openAIClient,
+        private readonly AiClientInterface $aiClient,
     ) {}
 
     public function generateSummary(string $content): string
     {
         try {
-            $summary = $this->openAIClient->summarize($content);
+            $summary = $this->aiClient->summarize($content);
 
             Log::info('[AiSummaryService] Summary generated', [
                 'content_length' => mb_strlen($content),

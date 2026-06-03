@@ -16,8 +16,10 @@ class MessageTest extends TestCase
     public function test_can_create_message_and_dispatches_job(): void
     {
         Http::fake([
-            'api.openai.com/*' => Http::response([
-                'choices' => [['message' => ['content' => 'Resumen de prueba']]],
+            'generativelanguage.googleapis.com/*' => Http::response([
+                'candidates' => [
+                    ['content' => ['parts' => [['text' => 'Resumen de prueba']]]],
+                ],
             ]),
         ]);
 
@@ -37,10 +39,10 @@ class MessageTest extends TestCase
         ]);
     }
 
-    public function test_returns_422_when_openai_fails(): void
+    public function test_returns_422_when_gemini_fails(): void
     {
         Http::fake([
-            'api.openai.com/*' => Http::response('Unauthorized', 401),
+            'generativelanguage.googleapis.com/*' => Http::response('Unauthorized', 401),
         ]);
 
         $response = $this->postJson('/api/messages', [
@@ -66,9 +68,10 @@ class MessageTest extends TestCase
         ]);
 
         DeliveryLog::create([
-            'message_id' => $message->id,
-            'channel'    => 'email',
-            'status'     => 'success',
+            'message_id'      => $message->id,
+            'channel'         => 'email',
+            'status'          => 'success',
+            'request_payload' => ['to' => 'test@example.com'],
         ]);
 
         $response = $this->getJson('/api/messages');
