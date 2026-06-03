@@ -217,17 +217,50 @@ Tests mock external services:
 
 ---
 
-## Screenshots
+## Evidencias
 
-> _Add screenshots here after testing with your Gemini API key._
+### Pantallas de la aplicación
 
 | Screen | Preview |
 |--------|---------|
-| **Send Message** | `docs/screenshots/send-message.png` |
-| **History Dashboard** | `docs/screenshots/history.png` |
-| **Slack Webhook** | `docs/screenshots/slack-webhook.png` |
-| **Email Log** | `docs/screenshots/email-log.png` |
-| **SMS SOAP Log** | `docs/screenshots/sms-log.png` |
+| **Formulario de envío** | ![Form](image/form.png) |
+| **Respuesta 201 Created** | ![Send response](image/send.png) |
+| **Historial de mensajes** | ![History](image/history.png) |
+| **Webhook.site — Slack POST** | ![Webhook](image/webhook.png) |
+
+### Logs de `laravel.log` — canales ejecutados
+
+```
+[2026-06-03 06:03:19] local.INFO: [AiSummaryService] AI disabled, using placeholder
+  {"summary":"[AI desactivado] Resumen no generado"}
+
+[2026-06-03 06:03:20] local.INFO: [EmailChannel] Simulated email sent
+  {"to":"user@example.com","subject":"Flujo de trabajo de Gitflow",
+   "body":"[AI desactivado] Resumen no generado",
+   "title":"Flujo de trabajo de Gitflow",
+   "summary":"[AI desactivado] Resumen no generado",
+   "original_content":"Gitflow es un flujo de trabajo..."}
+
+[2026-06-03 06:03:22] local.INFO: [SlackChannel] Message sent successfully
+
+[2026-06-03 06:03:22] local.INFO: [SmsChannel] SOAP XML generated
+  {"xml":"<soapenv:Envelope ...>
+    <sms:SendSmsRequest>
+      <sms:destination>+570000000000</sms:destination>
+      <sms:message>[AI desactivado] Resumen no generado</sms:message>
+      <sms:reference>Flujo de trabajo de Gitflow</sms:reference>
+    </sms:SendSmsRequest>"}
+
+[2026-06-03 06:03:22] local.INFO: [ChannelProcessorService] Channel processed
+  {"channel":"email","success":true}
+  {"channel":"slack","success":true}
+  {"channel":"sms","success":true}
+```
+
+Los 3 canales se procesaron correctamente:
+- **Email** → payload simulado logueado en `laravel.log`
+- **Slack** → POST real a Webhook.site (ver imagen)
+- **SMS** → XML SOAP generado con estructura `<SendSmsRequest>` y logueado
 
 ---
 
