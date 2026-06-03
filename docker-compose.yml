@@ -34,8 +34,9 @@ services:
       DB_USERNAME: ${DB_USERNAME:-mccp_user}
       DB_PASSWORD: ${DB_PASSWORD:-mccp_password}
       QUEUE_CONNECTION: database
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-true}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash-lite}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
     depends_on:
       postgres:
@@ -63,8 +64,9 @@ services:
       DB_USERNAME: ${DB_USERNAME:-mccp_user}
       DB_PASSWORD: ${DB_PASSWORD:-mccp_password}
       QUEUE_CONNECTION: database
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-true}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash-lite}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
     depends_on:
       postgres:

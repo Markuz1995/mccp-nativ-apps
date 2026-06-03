@@ -22,6 +22,19 @@ class AiSummaryServiceTest extends TestCase
         $this->assertSame('Short summary', $result);
     }
 
+    public function test_returns_placeholder_when_ai_disabled(): void
+    {
+        config(['services.gemini.enabled' => false]);
+
+        $client = Mockery::mock(GeminiClient::class);
+        $client->shouldNotReceive('summarize');
+
+        $service = new AiSummaryService($client);
+        $result = $service->generateSummary('Any content');
+
+        $this->assertStringContainsString('[AI desactivado]', $result);
+    }
+
     public function test_forwards_exception_when_gemini_fails(): void
     {
         $client = Mockery::mock(GeminiClient::class);

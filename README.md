@@ -136,8 +136,9 @@ docker compose up -d
 
 | Variable | Default | Required |
 |----------|---------|----------|
+| `GEMINI_ENABLED` | `true` | ❌ Set to `false` to bypass AI and test channels without API key |
 | `GEMINI_API_KEY` | — | ✅ AI summaries (Google Gemini) |
-| `GEMINI_MODEL` | `gemini-2.0-flash` | ❌ |
+| `GEMINI_MODEL` | `gemini-2.0-flash-lite` | ❌ |
 | `SLACK_WEBHOOK_URL` | — | ⬜ Slack channel (optional, webhook.site for testing) |
 | `DB_DATABASE` | `mccp_db` | ❌ |
 | `DB_USERNAME` | `mccp_user` | ❌ |

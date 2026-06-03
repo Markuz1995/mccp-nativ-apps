@@ -11,7 +11,7 @@ class GeminiClient implements AiClientInterface
     public function summarize(string $content): string
     {
         $apiKey = config('services.gemini.key');
-        $model = config('services.gemini.model', 'gemini-2.0-flash');
+        $model = config('services.gemini.model', 'gemini-2.0-flash-lite');
 
         $response = Http::timeout(30)
             ->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [

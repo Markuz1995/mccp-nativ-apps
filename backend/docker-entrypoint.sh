@@ -50,6 +50,9 @@ sed -i "s|^QUEUE_CONNECTION=.*|QUEUE_CONNECTION=database|" "$WORK_DIR/.env"
 sed -i "s|^CACHE_STORE=.*|CACHE_STORE=file|" "$WORK_DIR/.env"
 
 # Solo sobreescribir GEMINI/SLACK si la variable de entorno está definida
+if [ -n "${GEMINI_ENABLED:-}" ]; then
+    sed -i "s|^GEMINI_ENABLED=.*|GEMINI_ENABLED=${GEMINI_ENABLED}|" "$WORK_DIR/.env"
+fi
 if [ -n "${GEMINI_API_KEY:-}" ]; then
     sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" "$WORK_DIR/.env"
 fi

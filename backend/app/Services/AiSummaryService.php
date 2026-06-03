@@ -13,6 +13,16 @@ class AiSummaryService
 
     public function generateSummary(string $content): string
     {
+        if (! config('services.gemini.enabled', true)) {
+            $summary = '[AI desactivado] Resumen no generado';
+
+            Log::info('[AiSummaryService] AI disabled, using placeholder', [
+                'summary' => $summary,
+            ]);
+
+            return $summary;
+        }
+
         try {
             $summary = $this->aiClient->summarize($content);
 
