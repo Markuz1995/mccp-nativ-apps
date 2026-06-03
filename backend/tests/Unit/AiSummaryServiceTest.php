@@ -11,6 +11,8 @@ class AiSummaryServiceTest extends TestCase
 {
     public function test_generates_summary_successfully(): void
     {
+        config(['services.gemini.enabled' => true]);
+
         $client = Mockery::mock(GeminiClient::class);
         $client->expects('summarize')
             ->with('Long content here')
@@ -37,6 +39,8 @@ class AiSummaryServiceTest extends TestCase
 
     public function test_forwards_exception_when_gemini_fails(): void
     {
+        config(['services.gemini.enabled' => true]);
+
         $client = Mockery::mock(GeminiClient::class);
         $client->expects('summarize')
             ->andThrow(new \RuntimeException('API error'));

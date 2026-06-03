@@ -12,9 +12,12 @@ class EmailChannel implements ChannelInterface
     public function send(Message $message): ChannelResultDTO
     {
         $payload = [
-            'to'      => 'user@example.com',
-            'subject' => $message->title,
-            'body'    => $message->summary ?? $message->original_content,
+            'to'               => 'user@example.com',
+            'subject'          => $message->title,
+            'body'             => $message->summary ?? $message->original_content,
+            'title'            => $message->title,
+            'summary'          => $message->summary,
+            'original_content' => $message->original_content,
         ];
 
         Log::info('[EmailChannel] Simulated email sent', $payload);

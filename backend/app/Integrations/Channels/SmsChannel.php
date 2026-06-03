@@ -11,21 +11,22 @@ class SmsChannel implements ChannelInterface
 {
     public function send(Message $message): ChannelResultDTO
     {
-        $body = $message->summary ?? $message->original_content;
-
         $xml = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:sms="http://ultracem.com/sms">
+    <soapenv:Header/>
     <soapenv:Body>
-        <sms:send xmlns:sms="http://example.com/sms">
-            <message>{$body}</message>
-            <to>+1234567890</to>
-        </sms:send>
+        <sms:SendSmsRequest>
+            <sms:destination>+570000000000</sms:destination>
+            <sms:message>{$message->summary}</sms:message>
+            <sms:reference>{$message->title}</sms:reference>
+        </sms:SendSmsRequest>
     </soapenv:Body>
 </soapenv:Envelope>
 XML;
 
-        Log::info('[SmsChannel] SOAP XML', ['xml' => $xml]);
+        Log::info('[SmsChannel] SOAP XML generated', ['xml' => $xml]);
 
         return new ChannelResultDTO(
             channel: 'sms',

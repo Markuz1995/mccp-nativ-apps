@@ -15,6 +15,8 @@ class MessageTest extends TestCase
 
     public function test_can_create_message_and_dispatches_job(): void
     {
+        config(['services.gemini.enabled' => true]);
+
         Http::fake([
             'generativelanguage.googleapis.com/*' => Http::response([
                 'candidates' => [
@@ -41,6 +43,8 @@ class MessageTest extends TestCase
 
     public function test_returns_422_when_gemini_fails(): void
     {
+        config(['services.gemini.enabled' => true]);
+
         Http::fake([
             'generativelanguage.googleapis.com/*' => Http::response('Unauthorized', 401),
         ]);
